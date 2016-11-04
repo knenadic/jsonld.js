@@ -1,0 +1,17 @@
+{
+"@context" : {
+ "@base":"http://example.com/#",
+ "ex" : "http://ex.com/",
+ "@vocab": "http://example.com/vocab#",
+ "employees" : {"@reverse" : "ex:employeeOf"},
+ "children" : {"@reverse" : "ex:childOf"}
+},
+
+  "@type": [
+    "Person" 
+  ],
+  "@embed": "@never",
+  "@reverseRoots": false,
+  "employees": {"@priority" : 1}, 
+  "children": {"@priority" : 2}
+} 

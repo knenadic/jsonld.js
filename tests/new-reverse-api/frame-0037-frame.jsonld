@@ -1,0 +1,48 @@
+{
+    "@context": {
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "tp": "http://www.example.org/topologyProfile#",
+        "cim": "http://iec.ch/TC57/2013/CIM-schema-cim16#",
+        "entsoe": "http://entsoe.eu/CIM/SchemaExtension/3/1#",		
+        "children": { "@reverse": "rdfs:subClassOf", "@container": "@set" },
+        "properties": { "@reverse": "rdfs:domain", "@container": "@set" },
+        "defines": {"@reverse": "rdfs:isDefinedBy", "@container": "@set" }
+    },
+    "@type": [
+        "owl:Ontology",
+        "rdfs:Class",
+        "owl:Class"
+    ],
+    "@embed": "@first",
+    "@reverseRoots": true,
+    "defines": {
+        "@priority": 1,        
+        "@type": [
+            "owl:Class",
+            "owl:DatatypeProperty",
+            "owl:ObjectProperty"
+        ],
+        "rdfs:subClassOf": { "@omitDefault": true, "@embed": "@never" }
+    },
+
+    "children": {
+        "@priority": 2,
+        "@type": [
+            "rdfs:Class",
+            "owl:Class"
+        ],
+        "rdfs:subClassOf": { "@omitDefault": true, "@embed": "@never" }
+    },
+    "properties": {
+        "@priority": 3,
+        "@type": [
+            "rdf:Property",
+            "owl:ObjectProperty",
+            "owl:DatatypeProperty"
+        ],
+        "rdfs:range": { "@omitDefault": true, "@embed": "@never" }
+    }
+}

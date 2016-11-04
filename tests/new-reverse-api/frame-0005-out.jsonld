@@ -1,0 +1,62 @@
+{
+  "@context": {
+    "@base": "http://example.com/#",
+    "ex": "http://ex.com/",
+    "@vocab": "http://example.com/vocab#",
+    "employees": {
+      "@reverse": "ex:employeeOf"
+    },
+    "children": {
+      "@reverse": "ex:childOf"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "E",
+      "employees": {
+        "@id": "F",
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "E"
+        },
+        "ex:friendOf": {
+          "@id": "E"
+        },
+        "name": "F"
+      },
+      "@type": "Person",
+      "name": "E"
+    },
+    {
+      "@id": "F",
+      "@type": "Person",
+      "ex:employeeOf": {
+        "@id": "E"
+      },
+      "ex:friendOf": {
+        "@id": "E",
+        "employees": {
+          "@id": "F"
+        },
+        "@type": "Person",
+        "name": "E"
+      },
+      "name": "F"
+    },
+    {
+      "@id": "J",
+      "@type": "Person",
+      "ex:childOf": {
+        "@id": "K",
+        "@type": "Person",
+        "name": "Katty"
+      },
+      "name": "Joe"
+    },
+    {
+      "@id": "K",
+      "@type": "Person",
+      "name": "Katty"
+    }
+  ]
+}

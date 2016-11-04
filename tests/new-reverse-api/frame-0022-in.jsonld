@@ -1,0 +1,103 @@
+{
+  "@context": {
+    "ex" : "http://ex.com/",
+    "@base":"http://example.com/#",
+	"@vocab": "http://example.com/vocab#",
+	"ex:propertyOf": {
+      "@type" : "@id"
+    },
+	"ex:employeeOf": {
+      "@type" : "@id"
+    },
+	"ex:childOf": {
+      "@type" : "@id"
+    }
+    
+	
+  },
+  "@graph": [
+    {
+      "@id": "A",
+      "@type": "Person",  
+      "name": "A",
+	  "ex:childOf": "H",
+      "ex:employeeOf" : "C"
+      
+    },
+     {
+      "@id": "B",
+      "@type": "Person",  
+      "name": "B",
+      "ex:childOf": "A",
+      "ex:employeeOf" : "D"
+      
+    },
+     {
+      "@id": "D",
+      "@type": "Person",  
+      "name": "D",
+      "ex:childOf": "A"
+      
+    },
+     {
+      "@id": "C",
+      "@type": "Person",  
+      "name": "C",
+      "ex:childOf": "B",
+      "ex:employeeOf" : "B"
+      
+    },
+     {
+      "@id": "d",
+      "@type": "Property",  
+      "name": "d",
+      "ex:propertyOf": "C"      
+    },
+     {
+      "@id": "a",
+      "@type": "Property",  
+      "name": "a",
+      "ex:propertyOf": "A"     
+    },
+     {
+      "@id": "b",
+      "@type": "Property",  
+      "name": "b",
+      "ex:propertyOf": "A"     
+    },
+     {
+      "@id": "c",
+      "@type": "Property",  
+      "name": "c",
+      "ex:propertyOf": "A"     
+    },
+	 {
+      "@id": "F",
+      "@type": "Person",  
+      "name": "F",     
+      "ex:employeeOf" : "E"      
+    },
+	{
+      "@id": "E",
+      "@type": "Person",  
+      "name": "E"      
+    },
+	{
+      "@id": "H",
+      "@type": "Person",  
+      "name": "H",     
+      "ex:employeeOf" : "G"      
+    },
+	{
+      "@id": "G",
+      "@type": "Person",  
+      "name": "G"      
+    },
+	
+	{
+      "@id": "W",
+      "@type": "Person",  
+      "name": "Wally"      
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+	"@context" : {"ex" : "http://example.org/"},
+	"@type" : "ex:Type1",
+	"@reverse" : {
+	  "ex:includes" : {}
+	}
+}

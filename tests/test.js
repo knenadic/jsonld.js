@@ -59,6 +59,7 @@ if(_nodejs) {
 
   var fs = require('fs');
   var system = require('system');
+  var os = system.os;
   require('./setImmediate');
   var _jsdir = getEnv().JSDIR || 'js';
   require('../' + _jsdir + '/jsonld');
@@ -573,7 +574,12 @@ function dirname(filename) {
   if(_nodejs) {
     return path.dirname(filename);
   }
-  var idx = filename.lastIndexOf(fs.separator);
+  var separator = fs.separator;
+  // on Windows phantomJS fs.separator returns "\", while filename string contains "/" 
+  if(os.name == 'windows') {
+    separator = "/";
+  }
+  var idx = filename.lastIndexOf(separator);
   if(idx === -1) {
     return filename;
   }

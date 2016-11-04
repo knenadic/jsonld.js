@@ -1,0 +1,81 @@
+{
+    "@context": {
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "tp": "http://www.example.org/topologyProfile",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+         {
+            "@id": "http://www.example.org/topologyProfile",
+            "@type": "owl:Ontology",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "This profile has been built on the basis of the IEC 61970-456 document and adjusted to fit the purpose of the ENTSO-E CGMES."
+            },
+            "rdfs:label": {
+                "@language": "en",
+                "@value": "TopologyProfile"
+            }
+        },
+        {
+            "@id": "tp:#TopologyVersion.shortName",
+            "@type": "owl:DatatypeProperty",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "The short name of the profile used in profile documentation."
+            },
+            "rdfs:domain": {
+                "@id": "tp:#TopologyVersion"
+            },
+            "rdfs:isDefinedBy": {
+                "@id": "http://www.example.org/topologyProfile"
+            },
+            "rdfs:label": {
+                "@language": "en",
+                "@value": "shortName"
+            },
+            "rdfs:range": {
+                "@id": "xsd:string"
+            }
+        },
+        {
+            "@id": "_:b14",
+            "@type": "owl:Restriction",
+            "owl:onDataRange": {
+                "@id": "xsd:string"
+            },
+            "owl:onProperty": {
+                "@id": "tp:#TopologyVersion.shortName"
+            },
+            "owl:qualifiedCardinality": {
+                "@type": "xsd:nonNegativeInteger",
+                "@value": "1"
+            }
+        },
+
+        {
+            "@id": "tp:#TopologyVersion",
+            "@type": "owl:Class",
+            "rdfs:comment": {
+                "@language": "en",
+                "@value": "Version details."
+            },
+            "rdfs:isDefinedBy": {
+                "@id": "http://www.example.org/topologyProfile"
+            },
+            "rdfs:label": {
+                "@language": "en",
+                "@value": "TopologyVersion"
+            },
+            "rdfs:subClassOf": [
+
+                {
+                    "@id": "_:b14"
+                }
+            ]
+        }
+
+    ]
+}

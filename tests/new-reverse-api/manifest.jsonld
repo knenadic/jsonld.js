@@ -1,0 +1,283 @@
+{
+  "@context": "http://json-ld.org/test-suite/context.jsonld",
+  "@id": "",
+  "@type": "mf:Manifest",
+  "name": "New Reverse API Framing",
+  "description": "JSON-LD reverse tests use object comparison.",
+  "baseIri": "",
+  "sequence": [{
+    "@id": "#t0001",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Simple reverse embedding.",
+    "input": "frame-0001-in.jsonld",
+    "frame": "frame-0001-frame.jsonld",
+    "expect": "frame-0001-out.jsonld"
+  }, {
+    "@id": "#t0002",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Simple reverse embedding using reverse properties.",
+    "input": "frame-0002-in.jsonld",
+    "frame": "frame-0002-frame.jsonld",
+    "expect": "frame-0002-out.jsonld"
+  }, {
+     "@id": "#t0003",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Framing using a property and its reverse property.",
+    "input": "frame-0003-in.jsonld",
+    "frame": "frame-0003-frame.jsonld",
+    "expect": "frame-0003-out.jsonld"
+  }, {
+     "@id": "#t0004",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Simple framing with @embed @first, property @embed @never and reverse property.",
+    "input": "frame-0004-in.jsonld",
+    "frame": "frame-0004-frame.jsonld",
+    "expect": "frame-0004-out.jsonld"
+  }, {
+     "@id": "#t0005",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Simple framing with @embed @last and reverse property.",
+    "input": "frame-0005-in.jsonld",
+    "frame": "frame-0005-frame.jsonld",
+    "expect": "frame-0005-out.jsonld"
+   }, {
+     "@id": "#t0006",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A node is embedded when encountered for the first time using the @embed with the value of @first.",
+    "input": "frame-0006-in.jsonld",
+    "frame": "frame-0006-frame.jsonld",
+    "expect": "frame-0006-out.jsonld"
+  }, {
+     "@id": "#t0007",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are firstly encountered, including the reverse property values that are roots of reverse tree hierachies and are not already referenced nodes.",
+    "input": "frame-0007-in.jsonld",
+    "frame": "frame-0007-frame.jsonld",
+    "expect": "frame-0007-out.jsonld"
+  }, {
+    "@id": "#t0008",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are encountered for the last time, including the reverse property values that are roots of reverse tree hierachies and are not already referenced nodes.",
+    "input": "frame-0008-in.jsonld",
+    "frame": "frame-0008-frame.jsonld",
+    "expect": "frame-0008-out.jsonld"
+ }, {
+    "@id": "#t0009",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are firstly encountered, including the all reverse property values.",
+    "input": "frame-0009-in.jsonld",
+    "frame": "frame-0009-frame.jsonld",
+    "expect": "frame-0009-out.jsonld"
+ }, {
+    "@id": "#t0010",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are encountered for tha last time, including the all reverse property values.",
+    "input": "frame-0010-in.jsonld",
+    "frame": "frame-0010-frame.jsonld",
+    "expect": "frame-0010-out.jsonld"
+ }, {
+    "@id": "#t0011",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements always when they encountered, including the all reverse property values.",
+    "input": "frame-0011-in.jsonld",
+    "frame": "frame-0011-frame.jsonld",
+    "expect": "frame-0011-out.jsonld"
+ }, {
+    "@id": "#t0012",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, never embedding the elements, including the all reverse property values.",
+    "input": "frame-0012-in.jsonld",
+    "frame": "frame-0012-frame.jsonld",
+    "expect": "frame-0012-out.jsonld"
+  }, {
+    "@id": "#t0013",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are firstly encountered, including the reverse property values that are roots of tree reverse hierachies and are not already referenced nodes. When compared with the 0007 example defined priorities are inverted.",
+    "input": "frame-0013-in.jsonld",
+    "frame": "frame-0013-frame.jsonld",
+    "expect": "frame-0013-out.jsonld"
+  }, {
+    "@id": "#t0014",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are encountered for the last time, including the reverse property values that are roots of tree reverse hierachies and are not already referenced nodes.",
+    "input": "frame-0014-in.jsonld",
+    "frame": "frame-0014-frame.jsonld",
+    "expect": "frame-0014-out.jsonld"
+  }, {
+    "@id": "#t0015",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are firstly encountered, including the all reverse property values.",
+    "input": "frame-0015-in.jsonld",
+    "frame": "frame-0015-frame.jsonld",
+    "expect": "frame-0015-out.jsonld"
+ }, {
+    "@id": "#t0016",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements when they are encountered for the last time and including the all reverse property values.",
+    "input": "frame-0016-in.jsonld",
+    "frame": "frame-0016-frame.jsonld",
+    "expect": "frame-0016-out.jsonld"
+  }, {
+    "@id": "#t0017",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, embedding the elements always when they are encountered and including the all reverse property values.",
+    "input": "frame-0017-in.jsonld",
+    "frame": "frame-0017-frame.jsonld",
+    "expect": "frame-0017-out.jsonld"
+  }, {
+    "@id": "#t0018",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "A reverse hierarchy is created respecting the defined priorities, never embedding the elements when they are encountered and including the all reverse property values.",
+    "input": "frame-0018-in.jsonld",
+    "frame": "frame-0018-frame.jsonld",
+    "expect": "frame-0018-out.jsonld"
+  }, {
+     "@id": "#t0019",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three reverse properties respecting their default order.",
+    "input": "frame-0019-in.jsonld",
+    "frame": "frame-0019-frame.jsonld",
+    "expect": "frame-0019-out.jsonld"
+  }, {
+     "@id": "#t0020",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three reverse properties respecting their predefined priority/order.",
+    "input": "frame-0020-in.jsonld",
+    "frame": "frame-0020-frame.jsonld",
+    "expect": "frame-0020-out.jsonld"
+  }, {
+    "@id": "#t0021",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three reverse properties respecting their predefined priority/order. When compared to the previous example the priority/order of reverse priorities is changed.",
+    "input": "frame-0021-in.jsonld",
+    "frame": "frame-0021-frame.jsonld",
+    "expect": "frame-0021-out.jsonld"
+  }, {
+    "@id": "#t0022",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three prioritetized reverse properties where @reverseRoots is explicitly set to its default value of false (i.e. all reverse property values are included in the result).",
+    "input": "frame-0022-in.jsonld",
+    "frame": "frame-0022-frame.jsonld",
+    "expect": "frame-0022-out.jsonld"
+  }, {
+    "@id": "#t0023",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three prioritetized reverse properties where @reverseRoots is explicitly set to true (i.e. only reverse property values that are roots are included in the result together with nodes that not belong to any hierarchy but are result of filtering by type).",
+    "input": "frame-0023-in.jsonld",
+    "frame": "frame-0023-frame.jsonld",
+    "expect": "frame-0023-out.jsonld"
+  }, {
+    "@id": "#t0024",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three by default prioritetized reverse properties with the explicitly stated embedding of the last node references.",
+    "input": "frame-0024-in.jsonld",
+    "frame": "frame-0024-frame.jsonld",
+    "expect": "frame-0024-out.jsonld"
+  }, {
+    "@id": "#t0025",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three by default prioritetized reverse properties with the explicitly stated embedding of the first node references.",
+    "input": "frame-0025-in.jsonld",
+    "frame": "frame-0025-frame.jsonld",
+    "expect": "frame-0025-out.jsonld"
+  }, {
+    "@id": "#t0026",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three by default prioritetized reverse properties with the explicitly stated embedding of the first node references and by including only reverse property values that are roots of reverse tree hierarchies.",
+    "input": "frame-0026-in.jsonld",
+    "frame": "frame-0026-frame.jsonld",
+    "expect": "frame-0026-out.jsonld"
+  }, {
+    "@id": "#t0027",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Creation of a reversed tree hierarchy using three by default prioritetized reverse properties with the explicitly stated embedding of the first node references and by including only reverse property values that are roots of reverse tree hierarchies. When compared with the previous test, the input file contains additional nodes.",
+    "input": "frame-0027-in.jsonld",
+    "frame": "frame-0027-frame.jsonld",
+    "expect": "frame-0027-out.jsonld"
+  }, {
+    "@id": "#t0028",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The FOAF Ontology as a simple reversed tree.",
+    "input": "frame-0028-in.jsonld",
+    "frame": "frame-0028-frame.jsonld",
+    "expect": "frame-0028-out.jsonld"
+  }, {
+    "@id": "#t0029",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The FOAF Ontology as a filtered reversed tree.",
+    "input": "frame-0029-in.jsonld",
+    "frame": "frame-0029-frame.jsonld",
+    "expect": "frame-0029-out.jsonld"
+  }, {
+    "@id": "#t0030",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The FOAF Ontology as a filtered reversed tree using @reverseRoots.",
+    "input": "frame-0030-in.jsonld",
+    "frame": "frame-0030-frame.jsonld",
+    "expect": "frame-0030-out.jsonld"
+  }, {
+    "@id": "#t0031",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The Topology Profile Ontology framing.",
+    "input": "frame-0031-in.jsonld",
+    "frame": "frame-0031-frame.jsonld",
+    "expect": "frame-0031-out.jsonld"
+  }, {
+    "@id": "#t0032",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The Topology Profile Ontology excerpt; a reversed node that is a root of proritetized hierarchy has to be traversed first.",
+    "input": "frame-0032-in.jsonld",
+    "frame": "frame-0032-frame.jsonld",
+    "expect": "frame-0032-out.jsonld"
+  }, {
+    "@id": "#t0033",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The Topology Profile Ontology excerpt; skip blank nodes as the reverse hierarchy roots.",
+    "input": "frame-0033-in.jsonld",
+    "frame": "frame-0033-frame.jsonld",
+    "expect": "frame-0033-out.jsonld"
+  }, {
+    "@id": "#t0034",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Prioritetized reverse properties example.",
+    "input": "frame-0034-in.jsonld",
+    "frame": "frame-0034-frame.jsonld",
+    "expect": "frame-0034-out.jsonld"
+  }, {
+    "@id": "#t0035",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Override of reverse property priorities by a subframe. The example is based on the previous one.",
+    "input": "frame-0035-in.jsonld",
+    "frame": "frame-0035-frame.jsonld",
+    "expect": "frame-0035-out.jsonld"
+  }, {
+    "@id": "#t0036",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Using a frame to create inheritance hierarchy defined in RDFS. The same frame is used in 0036 and 0037 examples.",
+    "input": "frame-0036-in.jsonld",
+    "frame": "frame-0036-frame.jsonld",
+    "expect": "frame-0036-out.jsonld"
+  }, {
+    "@id": "#t0037",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Using a frame to create inheritance hierarchy defined in OWL. The same frame is used in 0036 and 0037 examples.",
+    "input": "frame-0037-in.jsonld",
+    "frame": "frame-0037-frame.jsonld",
+    "expect": "frame-0037-out.jsonld"
+  }, {
+    "@id": "#t0038",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Decluttered reverse tree hierarchy. A reverse hierarchy is created respecting the defined priorities, including the reverse property values that are roots of reverse tree hierachies and are not already referenced nodes, and with explicitly defined properties. Priorities are inverted when compared with thw example 0039.",
+    "input": "frame-0038-in.jsonld",
+    "frame": "frame-0038-frame.jsonld",
+    "expect": "frame-0038-out.jsonld"
+  }, {
+    "@id": "#t0039",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "Decluttered reverse tree hierarchy. A reverse hierarchy is created respecting the defined priorities, including the reverse property values that are roots of reverse tree hierachies and are not already referenced nodes, and with explicitly defined properties. Priorities are inverted when compared with thw example 0038.",
+    "input": "frame-0038-in.jsonld",
+    "frame": "frame-0038-frame.jsonld",
+    "expect": "frame-0038-out.jsonld"
+  }
+  ]
+}

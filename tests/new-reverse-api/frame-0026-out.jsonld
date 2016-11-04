@@ -1,0 +1,106 @@
+{
+  "@context": {
+    "@base": "http://example.com/#",
+    "ex": "http://ex.com/",
+    "@vocab": "http://example.com/vocab#",
+    "employees": {
+      "@reverse": "ex:employeeOf"
+    },
+    "children": {
+      "@reverse": "ex:childOf"
+    },
+    "properties": {
+      "@reverse": "ex:propertyOf"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "A",
+      "children": {
+        "@id": "D",
+        "employees": {
+          "@id": "B",
+          "children": {
+            "@id": "C",
+            "employees": {
+              "@id": "A"
+            },
+            "properties": {
+              "@id": "d",
+              "@type": "Property",
+              "ex:propertyOf": {
+                "@id": "C"
+              },
+              "name": "d"
+            },
+            "@type": "Person",
+            "ex:childOf": {
+              "@id": "B"
+            },
+            "ex:employeeOf": {
+              "@id": "B"
+            },
+            "name": "C"
+          },
+          "@type": "Person",
+          "ex:childOf": {
+            "@id": "A"
+          },
+          "ex:employeeOf": {
+            "@id": "D"
+          },
+          "name": "B"
+        },
+        "@type": "Person",
+        "ex:childOf": {
+          "@id": "A"
+        },
+        "name": "D"
+      },
+      "properties": [
+        {
+          "@id": "a",
+          "@type": "Property",
+          "ex:propertyOf": {
+            "@id": "A"
+          },
+          "name": "a"
+        },
+        {
+          "@id": "b",
+          "@type": "Property",
+          "ex:propertyOf": {
+            "@id": "A"
+          },
+          "name": "b"
+        },
+        {
+          "@id": "c",
+          "@type": "Property",
+          "ex:propertyOf": {
+            "@id": "A"
+          },
+          "name": "c"
+        }
+      ],
+      "@type": "Person",
+      "ex:employeeOf": {
+        "@id": "C"
+      },
+      "name": "A"
+    },
+    {
+      "@id": "E",
+      "employees": {
+        "@id": "F",
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "E"
+        },
+        "name": "F"
+      },
+      "@type": "Person",
+      "name": "E"
+    }
+  ]
+}

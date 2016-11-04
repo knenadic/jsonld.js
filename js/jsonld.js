@@ -448,7 +448,7 @@ jsonld.flatten = function(input, ctx, options, callback) {
  * @param [options] the framing options.
  *          [base] the base IRI to use.
  *          [expandContext] a context to expand with.
- *          [embed] default @embed flag: '@last', '@always', '@never', '@link'
+ *          [embed] default @embed flag: '@last', '@always', '@never', '@link', '@first'
  *            (default: '@last').
  *          [explicit] default @explicit flag (default: false).
  *          [requireAll] default @requireAll flag (default: true).
@@ -484,8 +484,12 @@ jsonld.frame = function(input, frame, options, callback) {
   if(!('requireAll' in options)) {
     options.requireAll = true;
   }
-  options.omitDefault = options.omitDefault || false;
-
+  options.omitDefault = options.omitDefault || false;  
+  options.reverse = options.reverse || {};
+  // filtering of reverse roots in result 
+  if(!('reverseRoots' in options)) {
+    options.reverseRoots = false;
+  }
   jsonld.nextTick(function() {
     // if frame is a string, attempt to dereference remote document
     if(typeof frame === 'string') {
@@ -3088,6 +3092,347 @@ Processor.prototype.flatten = function(input) {
 };
 
 /**
+* Reads reverse params from the given frame.
+*
+* @param frame the expanded JSON-LD frame.
+*
+* @param reverseParams the structure where the reverse parameters are stored.
+*/
+function _reverseParams(frame, reverseParams){
+	
+	// frame is expanded 
+	if (frame[0].hasOwnProperty("@reverse")) {
+			
+		if(_isObject( frame[0]["@reverse"])){
+		
+			var keys = Object.keys(frame[0]["@reverse"]).sort();		
+			for (var i =0 ; i < keys.length; i++) {
+				
+				  var key = keys[i];	
+				  var keyData = {};
+				  if (frame[0]["@reverse"].hasOwnProperty(key)) {
+					
+						keyData["@keyToReverse"] = key; 
+						reverseParams.push(keyData);
+				  }
+			}			
+		}
+	}	
+}
+
+/**
+* Populates the reverseParams container based on the supplied nodes.
+*
+* @param nodes the list of nodes objects that are traversed in order to identify all nodes related with a specific relationship.
+* @param reverseParams the container for reverse parameters and its related nodes (organized in a reverse map).
+**/
+function _populate(nodes,  reverseParams){
+	
+	for(var i = 0; i < nodes.length; ++i) {
+		
+		var node = nodes[i];	
+		
+		for(var n = 0; n < reverseParams.length; ++n) {
+			
+			var reverseParam = reverseParams[n];
+			
+			var left = reverseParam["@left"];
+			if (!_isArray(left)){
+				left = new Array();
+				reverseParam["@left"] = left;
+			}
+			
+			var right = reverseParam["@right"];
+			if(!_isArray(right) ){
+				right = new Array();
+				reverseParam["@right"] = right;				
+			}
+			
+			var reverseMap = reverseParam["@reverseMap"];	
+			if(!_isArray(reverseMap) ){
+				reverseMap = new Array();
+				reverseParam["@reverseMap"] = reverseMap;				
+			}
+
+			var keyToReverse = reverseParam["@keyToReverse"];
+			
+			if( keyToReverse in node){						
+				
+				// get pair of node ids related with keyToReverse property (domainNodeId, rangeNodeId)
+                var domainNodeId = node["@id"];
+                                        
+                if (left.indexOf(domainNodeId) < 0) {
+                    left.push(domainNodeId);
+                } 
+                  
+                for(var m = 0; m < node[keyToReverse].length; ++m){
+                            
+                    var rangeNodeId = node[keyToReverse][m]["@id"];
+				    
+                    if (right.indexOf(rangeNodeId) < 0) {
+                        right.push(rangeNodeId);
+                    }
+
+                    var valArr = reverseMap[rangeNodeId];
+                    if (valArr === undefined) {
+                        valArr = new Array();
+                        reverseMap[rangeNodeId] = valArr;
+                    }
+                            
+                    if (valArr.indexOf(domainNodeId) < 0) {
+                        valArr.push(domainNodeId);
+                        valArr.sort();
+                    }	
+                }						
+			}
+		}		
+	}
+
+	_calculateRoots(reverseParams);
+}
+
+/**
+ *  Populates  reverseParams based on the current state.
+ *  
+ *  @param state the current state.
+ *  @param reverseParam a container for reverse property.
+ */
+function _populateSingle(state,  reverseParam){
+
+	var nodes = getValues(state.graphs['@merged']);
+	
+	for(var i = 0; i < nodes.length; ++i) {
+		
+		var node = nodes[i];				
+		
+		var left = reverseParam["@left"];
+		if (!_isArray(left)){
+			left = new Array();
+			reverseParam["@left"] = left;
+		}
+		
+		var right = reverseParam["@right"];
+		if(!_isArray(right) ){
+			right = new Array();
+			reverseParam["@right"] = right;				
+		}
+		
+		var reverseMap = reverseParam["@reverseMap"];	
+		if(!_isArray(reverseMap) ){
+			reverseMap = new Array();
+			reverseParam["@reverseMap"] = reverseMap;				
+		}
+
+		var keyToReverse = reverseParam["@keyToReverse"];
+		
+		if( keyToReverse in node){
+						
+			// get pair of node ids related with keyToReverse property (domainNodeId, rangeNodeId)
+			var domainNodeId = node["@id"];
+			//	console.log("domainNodeId " + domainNodeId);
+			var rangeNodeId = node[keyToReverse][0]["@id"];
+							
+			if(left.indexOf(domainNodeId) < 0){
+				left.push(domainNodeId);
+			}
+			if(right.indexOf(rangeNodeId) < 0){
+				right.push(rangeNodeId);
+			}
+		
+			var valArr = reverseMap[rangeNodeId];
+			if (valArr === undefined){
+				valArr = new Array();
+				reverseMap[rangeNodeId] = valArr;
+			}
+			
+			if(valArr.indexOf(domainNodeId) < 0){
+				valArr.push(domainNodeId);
+			}
+		
+		}
+						
+	}
+        
+	state.reverseParams.push(reverseParam);
+}
+
+/**
+* For each reverse parameter root(s) of the reverse hierarchy are calculated.
+*
+* @param reverseParams the container where calculated hierarchy roots are stored for the coresponding reverse parameter.
+*/
+function _calculateRoots(reverseParams){
+
+	for(var n = 0; n < reverseParams.length; ++n) {
+		var reverseParam = reverseParams[n];	
+		
+		_calculateRoot(reverseParam);
+	}
+        }
+
+/**
+ * Sorts array of objects by property value
+ * 
+ * @param field object property name
+ * @param fn function applied on the object property value before comparison is made
+ */
+        
+_sortArrayOfObjectsBy = function (field, fn) {
+            
+    return function (a, b) {
+        a = a[field];
+        b = b[field];
+        if (typeof (fn) != 'undefined') {
+            a = fn(a);
+            b = fn(b);
+        }
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+}        
+       
+/**
+* Checks whether the given node id is a root of some reverse hierarchy.
+*
+* @param id the node id to be searched for.
+* @param reverseParam the container to be checked.
+*
+* @return the search result.
+*/   
+function _isRoot(id, reverseParams) { 
+
+    for (var n = 0; n < reverseParams.length; ++n) {
+                
+        var reverseParam = reverseParams[n];
+        var roots = reverseParam['@roots'];
+                
+        for (var m = 0; m < roots.length; m++) {
+            var root = roots[m];
+            if (root == id) { 
+                 return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+* Calculates roots based on the reverseParam content and stores it internally.
+*
+* @param reverseParam the container.
+*/
+function _calculateRoot(reverseParam){
+	
+	var intersection = new Array ();
+	var left = reverseParam["@left"];
+	var right = reverseParam["@right"];
+				
+	//calculate intersetion of left and right sets
+	for (var it in left){
+		var item = left[it];
+		if(right.indexOf(item) > -1){
+			intersection.push(item);
+		}			
+	} 
+	
+	// calculate roots
+	var roots = new Array();
+	for (var it in right){
+		var item = right[it];
+		if(intersection.indexOf(item)  < 0){
+			roots.push(item);
+		}			
+	} 
+	
+    reverseParam["@roots"] = roots;
+            
+    var nbroots = [];        
+    _findNonBlankRoots(reverseParam, roots, nbroots)
+            
+    _sortNonBlankRoots(reverseParam, nbroots);
+
+    reverseParam["@nonBlankRoots"] = nbroots;
+
+	delete reverseParam["@left"];
+	delete reverseParam["@right"];	
+ }
+        
+/**
+ *  Sorts non-blank roots.
+ *  
+ *  @param reverseParam the container for a reverse property
+ *  @param nbroots the non-blank roots that are sorted. 
+ */        
+function _sortNonBlankRoots(reverseParam, nbroots) {         
+	// Non-blank roots can descend from different blank roots. 
+	// Some non-blank roots can appear as descendants of other other non-blank roots in another blank node hierarchy. 
+	// For that reason non-blank roots that are parents to other non-blank roots should be pulled to the beginning of array similarly to sortIdsByRoots.
+	if (nbroots.length > 1) {
+		for (var m = 0; m < nbroots.length - 1; m++) {
+			for (var k = m + 1; k < nbroots.length; k++) {
+				if (_isDescendantOf(nbroots[m], nbroots[k], reverseParam)) {
+					var temp = nbroots[m];
+					nbroots[m] = nbroots[k];
+					nbroots[k] = temp;
+				}
+			}
+		}
+	}    	 
+}
+
+/**
+ *  Checks if an element is descendant of the other for the specific reverseParam relationship.
+ *  
+ *  @param b the descendant to be checked.
+ *  @param a the ancestor.
+ *  @param reverseParam the relationship of the interest.
+ *  
+ *  @result the boolean result.
+ */        
+function _isDescendantOf(b, a, reverseParam) {
+		
+	var related = reverseParam['@reverseMap'][a];
+	if (_isArray(related) && reverseParam['@reverseMap'][a].indexOf(b) > -1) {
+		return true;
+	} else if (_isArray(related)) {
+				
+		for (var m = 0; m < related.length; m++) {
+			var subA = related[m];
+			res = _isDescendantOf(b, subA, reverseParam);
+			if (res) {
+				return true;
+			}
+		}
+	}            
+	return false;           
+}
+
+/**
+*  Finds non-blank roots strating from the identified hierarchy roots of the particular reverse hierarchy.
+*  
+*  @param reverseParam the relationship of the interest.
+*  @param roots the roots of hierachy that has to be searched downstream. 
+*  @param nbroots the non-blank roots.
+*/		
+function   _findNonBlankRoots (reverseParam, roots, nbroots) { 
+	
+	for (var rootIndex in roots) {
+		
+		if (roots[rootIndex].indexOf('_:') === 0) {
+			
+			var parents = reverseParam['@reverseMap'][roots[rootIndex]];
+			_findNonBlankRoots(reverseParam, parents, nbroots);
+		} else {
+			var root = roots[rootIndex];
+			if (nbroots.indexOf(root) < 0) {                      
+				nbroots.push(root);
+			}                
+		}               
+	} 
+}
+
+/**
  * Performs JSON-LD framing.
  *
  * @param input the expanded JSON-LD to frame.
@@ -3102,18 +3447,29 @@ Processor.prototype.frame = function(input, frame, options) {
     options: options,
     graphs: {'@default': {}, '@merged': {}},
     subjectStack: [],
-    link: {}
+    link: {},
+	reverseParams : [],
+	traversed: [],
+	traversedAll: []
   };
 
+   _reverseParams(frame, state.reverseParams);
+   
   // produce a map of all graphs and name each bnode
   // FIXME: currently uses subjects from @merged graph only
   var issuer = new IdentifierIssuer('_:b');
   _createNodeMap(input, state.graphs, '@merged', issuer);
   state.subjects = state.graphs['@merged'];
+  
+ 
+  _populate(getValues(state.graphs['@merged']), state.reverseParams);
+  
 
   // frame the subjects
   var framed = [];
-  _frame(state, Object.keys(state.subjects).sort(), frame, framed, null);
+  
+  // state['@merged'] is node map - an object having properties as keys and node objects as values
+  _frame(state, Object.keys(state.subjects).sort(), frame, framed, null, false);
   return framed;
 };
 
@@ -4856,6 +5212,100 @@ function _mergeNodeMaps(graphs) {
   return defaultGraph;
 }
 
+// TODO: reverseParams probably should be a map instead of array
+function  getReverseParam(state, reverse_property){
+	var reverseParams = state.reverseParams
+	//var reverseParam = null;
+	for(var i=0; i < reverseParams.length; i++ ){
+		var reverseParam2 = reverseParams[i];
+		if(reverseParam2["@keyToReverse"] === reverse_property){
+			return reverseParam2;
+		}
+	}
+	//if (reverseParam === null){
+	  var  reverseParam = {};
+	  reverseParam["@keyToReverse"] = reverse_property;
+	  _populateSingle(state, reverseParam);
+	//}
+	
+	return reverseParam;
+}
+
+function getValues(obj){
+	var rval = [];
+	for (var key in obj) {
+		if (Object.prototype.hasOwnProperty.call(obj, key)) {
+			var val = obj[key];
+			rval.push(val);			
+		}
+	}
+	return rval;
+}
+
+/*
+ Returns a list of ids where ids are sorted firstly by root priority. Afterwards, the ids that are not roots are pushed to the end of the list.
+*/
+function sortIdsByRoots(state, matches, frame, nonblank){
+    var idss = [];
+
+    if (_isObject(matches) || _isArray(matches)) {
+                
+        // matches by root priority. 
+                
+        var reverse_properties = frame['@reverse'];
+        var props = [];
+        if (_isObject(reverse_properties)) {
+            props = getReversePropertiesOrdered(reverse_properties);
+        }
+                
+        for (var m = 0; m < props.length; m++) {
+            var prop = props[m];
+            var revParam = getReverseParam(state, prop);
+                    
+            var roots = [];
+            if (nonblank) {
+                roots = revParam['@nonBlankRoots'];
+            } else {
+                roots = revParam['@roots'];
+            }
+                    
+            for (var n = 0; n < roots.length; n++) {
+                var root = roots[n];
+                if ((_isObject(matches) && root in matches) || (_isArray(matches) && matches.indexOf(root) > -1)) {
+                    // skip if already added, as some ids can be roots of different hierachies
+                    if (idss.indexOf(root) === -1) {
+                        idss.push(root);
+                    }
+                }
+            }
+        }
+                
+        // add matches ids that are not roots
+        var temp = [];
+        var ids = [];
+        if (_isArray(matches)) {
+            //TODO: check if needed too expensive
+            ids = _clone(matches).sort();
+        } else if (_isObject(matches)) {
+            ids = Object.keys(matches).sort();
+        }
+                
+        for (var o = 0; o < ids.length; o++) {
+            var oid = ids[o];
+            if (idss.indexOf(oid) === -1) {
+                temp.push(oid);
+            }
+        }
+                
+                
+        idss.push.apply(idss, temp);
+
+    }
+	
+	
+	return idss;
+}
+
 /**
  * Frames subjects according to the given frame.
  *
@@ -4864,27 +5314,44 @@ function _mergeNodeMaps(graphs) {
  * @param frame the frame.
  * @param parent the parent subject or top-level array.
  * @param property the parent property, initialized to null.
+ * @param propertyInnerCall takes care that only the main reverse tree hierarchy is built.
  */
-function _frame(state, subjects, frame, parent, property) {
+function _frame(state, subjects, frame, parent, property, propertyInnerCall) {
   // validate the frame
   _validateFrame(frame);
   frame = frame[0];
 
-  // get flags for current frame
+  // get flags for the current frame
   var options = state.options;
+  
+  //flags are set based on the current frame, meaning that if current frame embeds node's properties will also embed if subframe is not defined for particular property that sets embed in different way  
   var flags = {
     embed: _getFrameFlag(frame, options, 'embed'),
     explicit: _getFrameFlag(frame, options, 'explicit'),
-    requireAll: _getFrameFlag(frame, options, 'requireAll')
+    requireAll: _getFrameFlag(frame, options, 'requireAll'),
+	reverse: _getFrameFlag(frame, options, 'reverse'),
+	reverseRoots: _getFrameFlag(frame, options, 'reverseRoots'),
   };
 
   // filter out subjects that match the frame
   var matches = _filterSubjects(state, subjects, frame, flags);
-
-  // add matches to output
-  var ids = Object.keys(matches).sort();
-  for(var idx = 0; idx < ids.length; ++idx) {
+    
+  var ids = [];
+            
+  // sort matches giving precedence to matches that are roots, sorting the rest of the maches ascending by their id            
+  ids = sortIdsByRoots(state, matches, frame, true);
+  
+  // add matches to output  
+  for(var idx = 0; idx < ids.length;idx++) {
+	
     var id = ids[idx];
+    
+    // property is null for top-level nodes    
+    if (property === null && flags.reverseRoots[0] && state.traversedAll.indexOf(id) > -1) {
+        // @reverseRoots is set to true, the subject is a top-level node and it is already part of some tree hierarhy so skip it
+        continue;
+    } 
+	
     var subject = matches[id];
 
     if(flags.embed === '@link' && id in state.link) {
@@ -4900,8 +5367,13 @@ function _frame(state, subjects, frame, parent, property) {
     /* Note: In order to treat each top-level match as a compartmentalized
     result, clear the unique embedded subjects map when the property is null,
     which only occurs at the top-level. */
+	/* When a root is traversed initialize firstEmbeds to keep track of embedded nodes;
+	FIXME: probably all three can be one, firstEmbeds and traversed can certainly be one
+	*/
     if(property === null) {
       state.uniqueEmbeds = {};
+	  state.firstEmbeds = {};
+	  state.traversed = [];
     }
 
     // start output for subject
@@ -4928,8 +5400,103 @@ function _frame(state, subjects, frame, parent, property) {
       state.uniqueEmbeds[id] = {parent: parent, property: property};
     }
 
+	// if only the first match should be embedded
+    if(flags.embed === '@first') {
+      // if already added in full add reference
+      if(id in state.firstEmbeds) {
+		 _addFrameOutput(parent, property, output);
+		 continue;       
+      }else{
+        state.firstEmbeds[id] = true;
+      }     
+    }
+	
     // push matching subject onto stack to enable circular embed checks
     state.subjectStack.push(subject);
+	
+    var reverse_properties = frame['@reverse'];
+    // If !propertyInnerCall is added to the next condition there will be no hierarchy trees in side branches starting from inner properties. This would make decluttered tree on hierarchies that are not of full length and where additional embedding rules are not set on properties. The same can be achieved by setting the appropriate embedding rules.
+	if(_isObject(reverse_properties)){	
+	
+		var props =  getReversePropertiesOrdered(reverse_properties);	
+				
+		for(var t=0; t< props.length; t++ ){
+			var reverse_property = props[t];
+                        
+          
+			// state should be passed in order to add particular reverseProperty if not already added to reverseParams
+			var reverseParam = getReverseParam(state, reverse_property);
+			var reverseMap = reverseParam["@reverseMap"];			
+                        
+            // related nodes for the given reverseProperty prioritized by non-blank roots; determines the order in which related nodes are traversed when prioritized hierachy is built
+            var refs = sortIdsByRoots(state, reverseMap[id], frame, true);
+            
+            if ( _isArray(refs) && refs.length > 0) {
+                            
+                // In order to ensure that reverse hierarchy is built recursively implicit frame is created contaning the @reverse section from the current frame. At the same time, values from the implict frame have to be overriden with the current subframe to ensure that new values (such as @priority change) are applied.
+                implframe = _createImplicitFrame(flags);
+                var subframe = reverse_properties[reverse_property]; 
+                            
+                var objProps = Object.keys(subframe[0]).sort();
+                for (var p = 0; p < objProps.length; p++) {
+                    var objProperty = objProps[p];
+                    if (subframe[0].hasOwnProperty(objProperty) && objProperty !== '@reverse') {
+                        implframe[0][objProperty] = _clone(subframe[0][objProperty]);
+                    } else if (subframe[0].hasOwnProperty(objProperty) && objProperty === '@reverse') {
+                                    
+                        var revProps = Object.keys(subframe[0]['@reverse']).sort();
+                        for (var h = 0; h < revProps.length; h++) {
+                            var revProperty = revProps[h];
+                            if (subframe[0]['@reverse'].hasOwnProperty(revProperty)) {
+                                implframe[0]['@reverse'][revProperty] = _clone(subframe[0]['@reverse'][revProperty]);    
+                            }
+                        }
+
+                    }
+                }
+                subframe = implframe;                
+                             
+
+				for(var k=0; k < refs.length; k++){
+					var r_id = refs[k];
+                                
+                    // when @reverseRoots are of interest skip reversed children of a current node that are already embedded in other traversed siblings           
+                    if (subframe[0]['@reverseRoots'][0] && state.traversed.indexOf(r_id) > -1) {
+                                    if (k === refs.length - 1 && _isObject(output["@reverse"]) && _isArray(output["@reverse"][reverse_property])) {
+                                        // sort reverse property value array by @id of node objects
+                                        output["@reverse"][reverse_property].sort(_sortArrayOfObjectsBy('@id', function (a) {
+                                            return a;
+                                        }));
+                                    }
+                            continue;                        
+                    }
+			
+					output["@reverse"] = output["@reverse"] || {};
+                    output["@reverse"][reverse_property] = output["@reverse"][reverse_property] || [];
+                   
+                    _frame(state, [r_id], subframe, output["@reverse"], reverse_property, propertyInnerCall);
+                    //  output["@reverse"][reverse_property] should be sorted by [{"@id:"}]         
+                                
+                    // node is traversed when part of the reversed hierarchy            
+                    if (state.traversed.indexOf(id) === -1 && !propertyInnerCall) {
+                        state.traversed.push(id);
+                    }
+                 
+                    if (state.traversed.indexOf(r_id) === -1 && !propertyInnerCall) {
+                        state.traversed.push(r_id);  
+                    }
+
+                    if (k === refs.length - 1) {
+                        // sort reverse property value array by @id of node objects
+                        output["@reverse"][reverse_property].sort(_sortArrayOfObjectsBy('@id', function (a) {
+                            return a;
+                        }));
+                    }
+				}
+			}			
+		}			
+	}
+	
 
     // iterate over subject properties
     var props = Object.keys(subject).sort();
@@ -4966,7 +5533,7 @@ function _frame(state, subjects, frame, parent, property) {
               var subframe = (prop in frame ?
                 frame[prop][0]['@list'] : _createImplicitFrame(flags));
               // recurse into subject reference
-              _frame(state, [o['@id']], subframe, list, '@list');
+              _frame(state, [o['@id']], subframe, list, '@list', true);
             } else {
               // include other values automatically
               _addFrameOutput(list, '@list', _clone(o));
@@ -4979,7 +5546,7 @@ function _frame(state, subjects, frame, parent, property) {
           // recurse into subject reference
           var subframe = (prop in frame ?
             frame[prop] : _createImplicitFrame(flags));
-          _frame(state, [o['@id']], subframe, output, prop);
+          _frame(state, [o['@id']], subframe, output, prop, true);
         } else {
           // include other values automatically
           _addFrameOutput(output, prop, _clone(o));
@@ -4988,6 +5555,7 @@ function _frame(state, subjects, frame, parent, property) {
     }
 
     // handle defaults
+	// goes through the all properties in the frame
     var props = Object.keys(frame).sort();
     for(var i = 0; i < props.length; ++i) {
       var prop = props[i];
@@ -5012,14 +5580,64 @@ function _frame(state, subjects, frame, parent, property) {
         output[prop] = [{'@preserve': preserve}];
       }
     }
-
+	
     // add output to parent
     _addFrameOutput(parent, property, output);
 
     // pop matching subject from circular ref-checking stack
     state.subjectStack.pop();
+
+    // when traversing of the top-level node is finished  
+    if (property === null) {
+                    
+        // and @reverseRoots is set to true, all already traversed nodes have to be filtered out in the following iterations
+        if (flags.reverseRoots[0]) {
+            state.traversedAll.push.apply(state.traversedAll, state.traversed);
+        }
+                    
+        //when all top-level nodes are traversed sort them by node @id as they were traversed by prioritized reverse hierarchy roots           
+        if (idx === ids.length - 1) {             
+            parent.sort(_sortArrayOfObjectsBy('@id', function (a) {
+                return a;
+            }));
+        }
+	}
   }
 }
+
+// orders by priorities from a passed frame
+ function getReversePropertiesOrdered(frameReverse){
+	
+	var props = Object.keys(frameReverse).sort();
+	// prioritySet a helper variable, determines whether priority is set for all reverse properties contained in the given frame
+	var prioritySet = null;
+	var priorities = {};
+	
+	for(var i=0; i < props.length; i++){
+		var prop = props[i];
+		if( _isArray( frameReverse[prop][0]['@priority'] )&& prioritySet !== false ){
+			prioritySet = true;
+			if(frameReverse[prop][0]['@priority'][0] in priorities){
+				// TODO: rethink 			    
+				return [];
+			}else{
+				priorities[frameReverse[prop][0]['@priority'][0]] = prop;
+			}
+		}else{
+			prioritySet = false;
+		}
+	}
+ 
+	if(prioritySet){
+		props = [];
+		var priors = Object.keys(priorities).sort();
+		for(var j=0; j < priors.length; j++){
+			var prior = priors[j];
+			props.push(priorities[prior]);
+		}
+	}	
+	return props; 
+ }
 
 /**
  * Creates an implicit frame when recursing through subject matches. If
@@ -5034,9 +5652,13 @@ function _frame(state, subjects, frame, parent, property) {
 function _createImplicitFrame(flags) {
   var frame = {};
   for(var key in flags) {
-    if(flags[key] !== undefined) {
-      frame['@' + key] = [flags[key]];
-    }
+    if( key === 'reverse' && flags[key] !== undefined) {
+         frame['@' + key] = flags[key];
+    }else if (key === 'reverseRoots' && flags[key] !== undefined) {
+         frame['@' + key] = flags[key];
+    }else if(flags[key] !== undefined){
+		 frame['@' + key] = [flags[key]];
+	}
   }
   return [frame];
 }
@@ -5070,7 +5692,14 @@ function _createsCircularReference(subjectToEmbed, subjectStack) {
  */
 function _getFrameFlag(frame, options, name) {
   var flag = '@' + name;
-  var rval = (flag in frame ? frame[flag][0] : options[name]);
+  var rval;  
+  if( name === 'reverseRoots'){
+	rval = (flag in frame ? frame[flag] : options[name]);  
+  } else if( name === 'reverse'){
+	rval = (flag in frame ? frame[flag] : options[name]);  
+  }else{
+	rval = (flag in frame ? frame[flag][0] : options[name]);  
+  }
   if(name === 'embed') {
     // default is "@last"
     // backwards-compatibility support for "embed" maps:
@@ -5080,7 +5709,7 @@ function _getFrameFlag(frame, options, name) {
       rval = '@last';
     } else if(rval === false) {
       rval = '@never';
-    } else if(rval !== '@always' && rval !== '@never' && rval !== '@link') {
+    } else if(rval !== '@always' && rval !== '@never' && rval !== '@link'&& rval !== '@first') {
       rval = '@last';
     }
   }
@@ -6410,6 +7039,8 @@ function _isKeyword(v) {
   case '@type':
   case '@value':
   case '@vocab':
+  case '@priority':
+  case '@reverseRoots':
     return true;
   }
   return false;

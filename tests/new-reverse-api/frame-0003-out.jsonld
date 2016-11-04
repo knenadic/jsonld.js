@@ -1,0 +1,35 @@
+{
+  "@context": {
+    "@base": "http://example.com/#",
+    "ex": "http://ex.com/",
+    "@vocab": "http://example.com/vocab#",
+    "employees": {
+      "@reverse": "ex:employeeOf"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "E",
+      "employees": {
+        "@id": "F",
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "E"
+        },
+        "name": "F"
+      },
+      "@type": "Person",
+      "name": "E"
+    },
+    {
+      "@id": "F",
+      "@type": "Person",
+      "ex:employeeOf": {
+        "@id": "E",
+        "@type": "Person",
+        "name": "E"
+      },
+      "name": "F"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+"@context" : {
+ "@base":"http://example.com/#",
+ "ex" : "http://ex.com/",
+ "@vocab": "http://example.com/vocab#",
+ "employees" : {"@reverse" : "ex:employeeOf"}
+},
+
+  "@type": [
+    "Person"	
+  ],
+  "@embed" : "@first",
+  "ex:employeeOf": {"@omitDefault": true, "@embed": "@never"},
+  "employees": {} 
+}

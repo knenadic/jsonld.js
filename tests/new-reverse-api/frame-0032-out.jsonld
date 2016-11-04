@@ -1,0 +1,83 @@
+{
+  "@context": {
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "tp": "http://www.example.org/topologyProfile",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "children": {
+      "@reverse": "rdfs:subClassOf",
+      "@container": "@set"
+    },
+    "properties": {
+      "@reverse": "rdfs:domain",
+      "@container": "@set"
+    },
+    "defines": {
+      "@reverse": "rdfs:isDefinedBy",
+      "@container": "@set"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "http://www.example.org/topologyProfile",
+      "defines": [
+        {
+          "@id": "tp:#IdentifiedObject",
+          "children": [
+            {
+              "@id": "tp:#ACDCTerminal",
+              "@type": "owl:Class",
+              "rdfs:comment": {
+                "@language": "en",
+                "@value": "An electrical connection point (AC or DC) to a piece of conducting equipment. Terminals are connected at physical connection points called connectivity nodes."
+              },
+              "rdfs:isDefinedBy": {
+                "@id": "http://www.example.org/topologyProfile"
+              },
+              "rdfs:label": {
+                "@language": "en",
+                "@value": "ACDCTerminal"
+              },
+              "rdfs:subClassOf": {
+                "@id": "tp:#IdentifiedObject"
+              }
+            }
+          ],
+          "@type": "owl:Class",
+          "rdfs:comment": {
+            "@language": "en",
+            "@value": "This is a root class to provide common identification for all classes needing identification and naming attributes."
+          },
+          "rdfs:isDefinedBy": {
+            "@id": "http://www.example.org/topologyProfile"
+          },
+          "rdfs:label": {
+            "@language": "en",
+            "@value": "IdentifiedObject"
+          },
+          "rdfs:subClassOf": [
+            {
+              "@id": "_:b0"
+            },
+            {
+              "@id": "_:b1"
+            },
+            {
+              "@id": "_:b2"
+            }
+          ]
+        }
+      ],
+      "@type": "owl:Ontology",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This profile has been built on the basis of the IEC 61970-456 document and adjusted to fit the purpose of the ENTSO-E CGMES."
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "TopologyProfile"
+      }
+    }
+  ]
+}

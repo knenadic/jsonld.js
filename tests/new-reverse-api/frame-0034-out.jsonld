@@ -1,0 +1,310 @@
+{
+  "@context": {
+    "@base": "http://example.com/#",
+    "ex": "http://ex.com/",
+    "@vocab": "http://example.com/vocab#",
+    "employees": {
+      "@reverse": "ex:employeeOf"
+    },
+    "children": {
+      "@reverse": "ex:childOf"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "A",
+      "children": {
+        "@id": "D"
+      },
+      "employees": [
+        {
+          "@id": "B",
+          "children": {
+            "@id": "E",
+            "employees": {
+              "@id": "D"
+            },
+            "@type": "Person",
+            "ex:childOf": {
+              "@id": "B"
+            },
+            "name": "E"
+          },
+          "employees": {
+            "@id": "C",
+            "employees": {
+              "@id": "D",
+              "@type": "Person",
+              "ex:childOf": {
+                "@id": "A"
+              },
+              "ex:employeeOf": [
+                {
+                  "@id": "A"
+                },
+                {
+                  "@id": "C"
+                },
+                {
+                  "@id": "E"
+                }
+              ],
+              "name": "D"
+            },
+            "@type": "Person",
+            "ex:employeeOf": {
+              "@id": "B"
+            },
+            "name": "C"
+          },
+          "@type": "Person",
+          "ex:employeeOf": {
+            "@id": "A"
+          },
+          "name": "B"
+        },
+        {
+          "@id": "D"
+        }
+      ],
+      "@type": "Person",
+      "name": "A"
+    },
+    {
+      "@id": "B",
+      "children": {
+        "@id": "E",
+        "employees": {
+          "@id": "D"
+        },
+        "@type": "Person",
+        "ex:childOf": {
+          "@id": "B"
+        },
+        "name": "E"
+      },
+      "employees": {
+        "@id": "C",
+        "employees": {
+          "@id": "D",
+          "@type": "Person",
+          "ex:childOf": {
+            "@id": "A"
+          },
+          "ex:employeeOf": [
+            {
+              "@id": "A"
+            },
+            {
+              "@id": "C"
+            },
+            {
+              "@id": "E"
+            }
+          ],
+          "name": "D"
+        },
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "B"
+        },
+        "name": "C"
+      },
+      "@type": "Person",
+      "ex:employeeOf": {
+        "@id": "A",
+        "children": {
+          "@id": "D"
+        },
+        "employees": [
+          {
+            "@id": "B"
+          },
+          {
+            "@id": "D"
+          }
+        ],
+        "@type": "Person",
+        "name": "A"
+      },
+      "name": "B"
+    },
+    {
+      "@id": "C",
+      "employees": {
+        "@id": "D",
+        "@type": "Person",
+        "ex:childOf": {
+          "@id": "A"
+        },
+        "ex:employeeOf": [
+          {
+            "@id": "A"
+          },
+          {
+            "@id": "C"
+          },
+          {
+            "@id": "E"
+          }
+        ],
+        "name": "D"
+      },
+      "@type": "Person",
+      "ex:employeeOf": {
+        "@id": "B",
+        "children": {
+          "@id": "E",
+          "employees": {
+            "@id": "D"
+          },
+          "@type": "Person",
+          "ex:childOf": {
+            "@id": "B"
+          },
+          "name": "E"
+        },
+        "employees": {
+          "@id": "C"
+        },
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "A",
+          "children": {
+            "@id": "D"
+          },
+          "employees": [
+            {
+              "@id": "B"
+            },
+            {
+              "@id": "D"
+            }
+          ],
+          "@type": "Person",
+          "name": "A"
+        },
+        "name": "B"
+      },
+      "name": "C"
+    },
+    {
+      "@id": "D",
+      "@type": "Person",
+      "ex:childOf": {
+        "@id": "A",
+        "children": {
+          "@id": "D"
+        },
+        "employees": [
+          {
+            "@id": "B",
+            "children": {
+              "@id": "E",
+              "employees": {
+                "@id": "D"
+              },
+              "@type": "Person",
+              "ex:childOf": {
+                "@id": "B"
+              },
+              "name": "E"
+            },
+            "employees": {
+              "@id": "C",
+              "employees": {
+                "@id": "D"
+              },
+              "@type": "Person",
+              "ex:employeeOf": {
+                "@id": "B"
+              },
+              "name": "C"
+            },
+            "@type": "Person",
+            "ex:employeeOf": {
+              "@id": "A"
+            },
+            "name": "B"
+          },
+          {
+            "@id": "D"
+          }
+        ],
+        "@type": "Person",
+        "name": "A"
+      },
+      "ex:employeeOf": [
+        {
+          "@id": "A"
+        },
+        {
+          "@id": "C"
+        },
+        {
+          "@id": "E"
+        }
+      ],
+      "name": "D"
+    },
+    {
+      "@id": "E",
+      "employees": {
+        "@id": "D",
+        "@type": "Person",
+        "ex:childOf": {
+          "@id": "A"
+        },
+        "ex:employeeOf": [
+          {
+            "@id": "A"
+          },
+          {
+            "@id": "C"
+          },
+          {
+            "@id": "E"
+          }
+        ],
+        "name": "D"
+      },
+      "@type": "Person",
+      "ex:childOf": {
+        "@id": "B",
+        "children": {
+          "@id": "E"
+        },
+        "employees": {
+          "@id": "C",
+          "employees": {
+            "@id": "D"
+          },
+          "@type": "Person",
+          "ex:employeeOf": {
+            "@id": "B"
+          },
+          "name": "C"
+        },
+        "@type": "Person",
+        "ex:employeeOf": {
+          "@id": "A",
+          "children": {
+            "@id": "D"
+          },
+          "employees": [
+            {
+              "@id": "B"
+            },
+            {
+              "@id": "D"
+            }
+          ],
+          "@type": "Person",
+          "name": "A"
+        },
+        "name": "B"
+      },
+      "name": "E"
+    }
+  ]
+}

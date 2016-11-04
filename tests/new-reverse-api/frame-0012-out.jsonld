@@ -1,0 +1,30 @@
+{
+  "@context": {
+    "@base": "http://example.com/#",
+    "ex": "http://ex.com/",
+    "@vocab": "http://example.com/vocab#",
+    "employees": {
+      "@reverse": "ex:employeeOf"
+    },
+    "children": {
+      "@reverse": "ex:childOf"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "A"
+    },
+    {
+      "@id": "B"
+    },
+    {
+      "@id": "C"
+    },
+    {
+      "@id": "D"
+    },
+    {
+      "@id": "E"
+    }
+  ]
+}

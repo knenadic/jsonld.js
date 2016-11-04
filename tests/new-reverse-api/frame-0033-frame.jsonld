@@ -1,0 +1,39 @@
+{
+    "@context": {
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "tp": "http://www.example.org/topologyProfile",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",		
+        "children": { "@reverse": "rdfs:subClassOf", "@container": "@set" },
+        "properties": { "@reverse": "rdfs:domain", "@container": "@set" },
+        "defines": { "@reverse": "rdfs:isDefinedBy", "@container": "@set" }
+    },
+    "@type": [
+        "owl:Ontology"
+    ],
+    "@embed": "@first",
+
+    "defines": {
+        "@reverseRoots": true,
+        "@type": [
+            "owl:Class",
+            "owl:DatatypeProperty",
+            "owl:ObjectProperty"
+        ],
+        "rdfs:subClassOf": { "@omitDefault": true, "@embed": "@never" }
+    },
+    "children": {
+        "@type": [           
+            "owl:Class"
+        ],     
+        "rdfs:subClassOf": { "@omitDefault": true, "@embed": "@never" }
+    },
+    "properties": {
+        "@type": [            
+            "owl:ObjectProperty",
+            "owl:DatatypeProperty"
+        ],
+        "rdfs:range": { "@omitDefault": true, "@embed": "@never" }       
+    }
+}

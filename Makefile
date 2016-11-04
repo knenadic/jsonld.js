@@ -43,6 +43,12 @@ test-local-node:
 test-local-browser:
 	@JSONLD_TEST_SUITE=./tests/new-embed-api $(MAKE) test-suite-browser
 
+test-local-reverse-node:
+	@JSONLD_TEST_SUITE=./tests/new-reverse-api $(MAKE) test-suite-node
+
+test-local-reverse-browser:
+	@JSONLD_TEST_SUITE=./tests/new-reverse-api $(MAKE) test-suite-browser
+
 test-normalization-node:
 	@JSONLD_TEST_SUITE=../normalization/tests $(MAKE) test-suite-node
 

@@ -1,0 +1,31 @@
+{
+    "@context": {
+        "@base": "http://example.com/#",
+        "ex": "http://ex.com/",
+        "@vocab": "http://example.com/vocab#",
+        "employees": { "@reverse": "ex:employeeOf" },
+        "children": { "@reverse": "ex:childOf" }
+    },
+
+    "@type": [
+        "Person"
+    ],
+    "@embed": "@first",
+    "@reverseRoots": false,
+    "employees": {
+        "@type": [
+            "Person"
+        ],
+        "@priority": 1,
+        "ex:employeeOf": { "@omitDefault": true, "@embed": "@never" },
+        "ex:childOf": { "@omitDefault": true, "@embed": "@never" }  
+    },
+    "children": {
+        "@type": [
+            "Person"
+        ],
+        "@priority": 2,
+        "ex:employeeOf": { "@omitDefault": true, "@embed": "@never" },
+        "ex:childOf": { "@omitDefault": true, "@embed": "@never" }
+    }
+}

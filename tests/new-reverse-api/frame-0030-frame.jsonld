@@ -1,0 +1,84 @@
+{
+    "@context": {
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "dc11": "http://purl.org/dc/elements/1.1/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "title": "dc11:title",
+        "description": "dc11:description",
+        "label": "rdfs:label",
+        "comment": "rdfs:comment",
+        "subClassOf": {
+            "@id": "rdfs:subClassOf",
+            "@type": "@id"
+        },
+        "domain": {
+            "@id": "rdfs:domain",
+            "@type": "@id"
+        },
+        "range": {
+            "@id": "rdfs:range",
+            "@type": "@id"
+        },
+        "subPropertyOf": {
+            "@id": "rdfs:subPropertyOf",
+            "@type": "@id"
+        },
+        "equivalentClass": {
+            "@id": "owl:equivalentClass",
+            "@type": "@id"
+        },
+        "disjointWith": {
+            "@id": "owl:disjointWith",
+            "@type": "@id"
+        },
+        "inverseOf": {
+            "@id": "owl:inverseOf",
+            "@type": "@id"
+        },
+        "equivalentProperty": {
+            "@id": "owl:equivalentProperty",
+            "@type": "@id"
+        },
+        "status": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
+        "children": { "@reverse": "rdfs:subClassOf", "@container": "@set" },
+        "properties": { "@reverse": "rdfs:domain", "@container": "@set" },
+        "defines": { "@reverse": "rdfs:isDefinedBy", "@container": "@set" }
+    },
+    "@type": [
+        "owl:Ontology"
+    ],
+    "@embed": "@first",
+    "defines": {
+        "@reverseRoots": true,
+        "@type": [
+            "rdfs:Class",
+            "owl:Class",
+            "rdf:Property",
+            "owl:FunctionalProperty",
+            "owl:DatatypeProperty"
+        ],
+        "disjointWith": { "@omitDefault": true, "@embed": "@never" },
+        "subClassOf": { "@omitDefault": true, "@embed": "@never" }
+    },
+    "children": {
+        "@type": [
+                "rdfs:Class",
+                "owl:Class"
+              ],
+        "disjointWith": { "@omitDefault": true, "@embed": "@never" },
+        "subClassOf":  { "@omitDefault": true, "@embed": "@never" }
+    },
+    "properties": {
+         "@type": [
+                "rdf:Property",
+                "owl:FunctionalProperty",
+                "owl:DatatypeProperty"
+              ],
+        "range": { "@omitDefault": true, "@embed": "@never" },
+        "inverseOf": { "@omitDefault": true, "@embed": "@never" },
+        "subPropertyOf":  { "@omitDefault": true, "@embed": "@never" }
+    }
+  }   
