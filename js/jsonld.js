@@ -3181,7 +3181,6 @@ function _populate(nodes,  reverseParams){
                             
                     if (valArr.indexOf(domainNodeId) < 0) {
                         valArr.push(domainNodeId);
-                        valArr.sort();
                     }	
                 }						
 			}
@@ -5285,9 +5284,9 @@ function sortIdsByRoots(state, matches, frame, nonblank){
         var ids = [];
         if (_isArray(matches)) {
             //TODO: check if needed too expensive
-            ids = _clone(matches).sort();
+            ids = matches;
         } else if (_isObject(matches)) {
-            ids = Object.keys(matches).sort();
+            ids = Object.keys(matches);
         }
                 
         for (var o = 0; o < ids.length; o++) {
@@ -5296,9 +5295,9 @@ function sortIdsByRoots(state, matches, frame, nonblank){
                 temp.push(oid);
             }
         }
-                
-                
-        idss.push.apply(idss, temp);
+
+        temp.sort();
+        idss.push.apply(idss, temp );
 
     }
 	
