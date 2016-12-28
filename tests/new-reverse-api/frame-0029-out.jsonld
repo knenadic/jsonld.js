@@ -766,7 +766,51 @@
           ],
           "children": [
             {
-              "@id": "foaf:Image"
+              "@id": "foaf:Image",
+              "properties": [
+                {
+                  "@id": "foaf:depicts",
+                  "@type": [
+                    "rdf:Property",
+                    "owl:ObjectProperty"
+                  ],
+                  "comment": "A thing depicted in this representation.",
+                  "domain": "foaf:Image",
+                  "rdfs:isDefinedBy": {
+                    "@id": "http://xmlns.com/foaf/0.1/"
+                  },
+                  "label": "depicts",
+                  "range": "owl:Thing",
+                  "inverseOf": "foaf:depiction",
+                  "status": "testing"
+                },
+                {
+                  "@id": "foaf:thumbnail",
+                  "@type": [
+                    "rdf:Property",
+                    "owl:ObjectProperty"
+                  ],
+                  "comment": "A derived thumbnail image.",
+                  "domain": "foaf:Image",
+                  "rdfs:isDefinedBy": {
+                    "@id": "http://xmlns.com/foaf/0.1/"
+                  },
+                  "label": "thumbnail",
+                  "range": "foaf:Image",
+                  "status": "testing"
+                }
+              ],
+              "@type": [
+                "rdfs:Class",
+                "owl:Class"
+              ],
+              "comment": "An image.",
+              "rdfs:isDefinedBy": {
+                "@id": "http://xmlns.com/foaf/0.1/"
+              },
+              "label": "Image",
+              "subClassOf": "foaf:Document",
+              "status": "testing"
             },
             {
               "@id": "foaf:PersonalProfileDocument",
@@ -802,51 +846,51 @@
           "@id": "foaf:Group"
         },
         {
-          "@id": "foaf:Image",
-          "properties": [
-            {
-              "@id": "foaf:depicts",
-              "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-              ],
-              "comment": "A thing depicted in this representation.",
-              "domain": "foaf:Image",
-              "rdfs:isDefinedBy": {
-                "@id": "http://xmlns.com/foaf/0.1/"
-              },
-              "label": "depicts",
-              "range": "owl:Thing",
-              "inverseOf": "foaf:depiction",
-              "status": "testing"
-            },
-            {
-              "@id": "foaf:thumbnail",
-              "@type": [
-                "rdf:Property",
-                "owl:ObjectProperty"
-              ],
-              "comment": "A derived thumbnail image.",
-              "domain": "foaf:Image",
-              "rdfs:isDefinedBy": {
-                "@id": "http://xmlns.com/foaf/0.1/"
-              },
-              "label": "thumbnail",
-              "range": "foaf:Image",
-              "status": "testing"
-            }
-          ],
-          "@type": [
-            "rdfs:Class",
-            "owl:Class"
-          ],
-          "comment": "An image.",
-          "rdfs:isDefinedBy": {
-            "@id": "http://xmlns.com/foaf/0.1/"
-          },
-          "label": "Image",
-          "subClassOf": "foaf:Document",
-          "status": "testing"
+          "@id": "foaf:Image"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         },
         {
           "@id": "foaf:LabelProperty",

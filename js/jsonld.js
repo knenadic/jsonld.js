@@ -3104,8 +3104,9 @@ function _reverseParams(frame, reverseParams){
 	if (frame[0].hasOwnProperty("@reverse")) {
 			
 		if(_isObject( frame[0]["@reverse"])){
-		
-			var keys = Object.keys(frame[0]["@reverse"]).sort();		
+                    
+            // the order of keys determines how reverse properties are traversed 
+			var keys = Object.keys(frame[0]["@reverse"]);		
 			for (var i =0 ; i < keys.length; i++) {
 				
 				  var key = keys[i];	
@@ -5267,13 +5268,14 @@ function sortIdsByRoots(state, matches, frame, nonblank){
             } else {
                 roots = revParam['@roots'];
             }
-                    
-            for (var n = 0; n < roots.length; n++) {
-                var root = roots[n];
-                if ((_isObject(matches) && root in matches) || (_isArray(matches) && matches.indexOf(root) > -1)) {
-                    // skip if already added, as some ids can be roots of different hierachies
-                    if (idss.indexOf(root) === -1) {
-                        idss.push(root);
+            if (roots !== undefined) {
+                for (var n = 0; n < roots.length; n++) {
+                    var root = roots[n];
+                    if ((_isObject(matches) && root in matches) || (_isArray(matches) && matches.indexOf(root) > -1)) {
+                        // skip if already added, as some ids can be roots of different hierachies
+                        if (idss.indexOf(root) === -1) {
+                            idss.push(root);
+                        }
                     }
                 }
             }
@@ -5606,8 +5608,9 @@ function _frame(state, subjects, frame, parent, property, propertyInnerCall) {
 
 // orders by priorities from a passed frame
  function getReversePropertiesOrdered(frameReverse){
-	
-	var props = Object.keys(frameReverse).sort();
+            
+    // take the order of reverse properties as is
+	var props = Object.keys(frameReverse);
 	// prioritySet a helper variable, determines whether priority is set for all reverse properties contained in the given frame
 	var prioritySet = null;
 	var priorities = {};
