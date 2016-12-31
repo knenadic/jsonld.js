@@ -3419,7 +3419,7 @@ function   _findNonBlankRoots (reverseParam, roots, nbroots) {
 	
 	for (var rootIndex in roots) {
 		
-		if (roots[rootIndex].indexOf('_:') === 0) {
+		if (roots[rootIndex] !== 'undefined' && roots[rootIndex].indexOf('_:') === 0) {
 			
 			var parents = reverseParam['@reverseMap'][roots[rootIndex]];
 			_findNonBlankRoots(reverseParam, parents, nbroots);

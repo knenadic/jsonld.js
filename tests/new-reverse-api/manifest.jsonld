@@ -275,9 +275,16 @@
     "@id": "#t0039",
     "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
     "name": "Decluttered reverse tree hierarchy. A reverse hierarchy is created respecting the defined priorities, including the reverse property values that are roots of reverse tree hierachies and are not already referenced nodes, and with explicitly defined properties. Priorities are inverted when compared with thw example 0038.",
-    "input": "frame-0038-in.jsonld",
-    "frame": "frame-0038-frame.jsonld",
-    "expect": "frame-0038-out.jsonld"
+    "input": "frame-0039-in.jsonld",
+    "frame": "frame-0039-frame.jsonld",
+    "expect": "frame-0039-out.jsonld"
+  }, {
+    "@id": "#t0040",
+    "@type": ["jld:PositiveEvaluationTest", "jld:FrameTest"],
+    "name": "The reverse framing example from the JSON-LD Framing 1.1 specification.",
+    "input": "frame-0040-in.jsonld",
+    "frame": "frame-0040-frame.jsonld",
+    "expect": "frame-0040-out.jsonld"
   }
   ]
 }
